@@ -45,3 +45,7 @@ target/
 
 # Logs
 *.log
+
+# Terraform plan files
+*.tfplan
+tfplan
