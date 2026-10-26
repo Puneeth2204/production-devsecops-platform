@@ -1,0 +1,41 @@
+services:
+  database:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: hospital
+      POSTGRES_USER: hospital
+      POSTGRES_PASSWORD: hospital
+    volumes:
+      - hospital-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hospital -d hospital"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    image: hospital-api:day5
+    container_name: hospital-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/hospital
+      SPRING_DATASOURCE_USERNAME: hospital
+      SPRING_DATASOURCE_PASSWORD: hospital
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  frontend:
+    image: hospital-frontend:day5
+    container_name: hospital-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+
+volumes:
+  hospital-postgres-data:

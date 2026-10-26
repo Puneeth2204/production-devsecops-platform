@@ -1,0 +1,110 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background: #f3f6fb;
+  color: #17233b;
+}
+
+.dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 56px 28px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.eyebrow {
+  color: #3867d6;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+h1 {
+  margin: 12px 0;
+  font-size: clamp(30px, 5vw, 44px);
+}
+
+.subtitle,
+.card p {
+  color: #66748b;
+}
+
+.status {
+  padding: 10px 14px;
+  border-radius: 24px;
+  background: #e8edf5;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.status.online {
+  background: #d9f7e8;
+  color: #147849;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  padding: 26px;
+  border: 1px solid #e1e7f0;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 8px 28px rgb(25 48 86 / 5%);
+}
+
+.card-label {
+  margin-top: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.card h2 {
+  overflow-wrap: anywhere;
+  font-size: 28px;
+}
+
+.card .message {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.card p:last-child {
+  font-size: 13px;
+}
+
+.error {
+  padding: 14px;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+footer {
+  margin-top: 44px;
+  color: #66748b;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 32px 18px;
+  }
+}
