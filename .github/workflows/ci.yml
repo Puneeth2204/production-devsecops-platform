@@ -100,7 +100,7 @@ jobs:
           platforms: linux/amd64
 
       - name: Scan backend image with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: hospital-backend:ci
           format: table
@@ -127,7 +127,7 @@ jobs:
           platforms: linux/amd64
 
       - name: Scan frontend image with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: hospital-frontend:ci
           format: table
