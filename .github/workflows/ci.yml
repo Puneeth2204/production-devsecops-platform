@@ -1,3 +1,4 @@
+
 name: Hospital Management CI
 
 on:
@@ -77,3 +78,81 @@ jobs:
       - name: Build frontend
         working-directory: app/frontend
         run: npm run build
+
+  container-security:
+    name: Container Scanning and SBOM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: app/backend
+          file: app/backend/Dockerfile
+          tags: hospital-backend:ci
+          load: true
+          platforms: linux/amd64
+
+      - name: Scan backend image with Trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: hospital-backend:ci
+          format: table
+          output: trivy-backend.txt
+          severity: HIGH,CRITICAL
+          exit-code: '0'
+          ignore-unfixed: true
+
+      - name: Generate backend SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: hospital-backend:ci
+          artifact-name: backend-sbom.spdx.json
+          output-file: backend-sbom.spdx.json
+          format: spdx-json
+
+      - name: Build frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: app/frontend
+          file: app/frontend/Dockerfile
+          tags: hospital-frontend:ci
+          load: true
+          platforms: linux/amd64
+
+      - name: Scan frontend image with Trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: hospital-frontend:ci
+          format: table
+          output: trivy-frontend.txt
+          severity: HIGH,CRITICAL
+          exit-code: '0'
+          ignore-unfixed: true
+
+      - name: Generate frontend SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: hospital-frontend:ci
+          artifact-name: frontend-sbom.spdx.json
+          output-file: frontend-sbom.spdx.json
+          format: spdx-json
+
+      - name: Upload security reports and SBOMs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-security-reports
+          path: |
+            trivy-backend.txt
+            trivy-frontend.txt
+            backend-sbom.spdx.json
+            frontend-sbom.spdx.json
+          if-no-files-found: warn
+          retention-days: 30
