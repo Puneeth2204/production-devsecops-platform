@@ -1,0 +1,45 @@
+namespace: hospital-management
+
+images:
+  backend:
+    repository: 151498473638.dkr.ecr.us-east-1.amazonaws.com/hospital-devsecops-dev-hospital-management
+    tag: v1-backend
+    pullPolicy: Always
+  frontend:
+    repository: 151498473638.dkr.ecr.us-east-1.amazonaws.com/hospital-devsecops-dev-hospital-management
+    tag: v1-frontend
+    pullPolicy: Always
+
+replicas:
+  backend: 1
+  frontend: 1
+
+database:
+  image: postgres:16
+  name: hospital
+  username: hospital
+  password: change-this-password
+  storage: 2Gi
+
+resources:
+  backend:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  frontend:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  database:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
