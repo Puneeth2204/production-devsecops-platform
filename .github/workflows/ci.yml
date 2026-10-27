@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   backend-build:
-    name: Build Spring Boot Backend
+    name: Backend Build and Dependency Scan
     runs-on: ubuntu-latest
 
     steps:
@@ -29,8 +29,27 @@ jobs:
       - name: Build backend
         run: mvn -B -f app/backend/pom.xml clean package -DskipTests
 
+      - name: Scan backend dependencies
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: Hospital-Management-Backend
+          path: app/backend
+          format: HTML
+          out: reports
+          args: >
+            --enableRetired
+        continue-on-error: true
+
+      - name: Upload backend dependency report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dependency-report
+          path: reports/
+          if-no-files-found: ignore
+
   frontend-build:
-    name: Build React Frontend
+    name: Frontend Build and Dependency Audit
     runs-on: ubuntu-latest
 
     steps:
@@ -47,6 +66,10 @@ jobs:
       - name: Install dependencies
         working-directory: app/frontend
         run: npm ci
+
+      - name: Audit frontend dependencies
+        working-directory: app/frontend
+        run: npm audit --audit-level=high
 
       - name: Build frontend
         working-directory: app/frontend
