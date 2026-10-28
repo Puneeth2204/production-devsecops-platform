@@ -3,7 +3,7 @@ namespace: hospital-management
 images:
   backend:
     repository: 151498473638.dkr.ecr.us-east-1.amazonaws.com/hospital-devsecops-dev-hospital-management
-    tag: v1-backend
+    tag: prometheus-fix-20261028144321
     pullPolicy: Always
   frontend:
     repository: 151498473638.dkr.ecr.us-east-1.amazonaws.com/hospital-devsecops-dev-hospital-management
