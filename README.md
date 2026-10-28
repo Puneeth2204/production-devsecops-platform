@@ -103,7 +103,7 @@ The `dev` environment composes four reusable modules: **VPC**, **IAM**, **ECR**,
 
 ![AWS VPC](docs/screenshots/12-aws-vpc.png)
 
-**EKS cluster**: active, with zero cluster health issues, zero node health issues, and zero capability issues.
+**EKS cluster**: active, with zero cluster health issues, zero node health issues, and zero capability issues.The project was successfully deployed and validated on AWS EKS. The EKS cluster and associated AWS infrastructure have since been destroyed to avoid ongoing costs. T
 
 ![EKS cluster](docs/screenshots/13-aws-eks-cluster.png)
 
