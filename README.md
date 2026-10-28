@@ -230,13 +230,6 @@ terraform destroy
 - Applying least-privilege controls with NetworkPolicies and RBAC.
 - Debugging the full path from a Spring Boot actuator metric to a Prometheus target to a Grafana panel.
 
-## Roadmap
-
-- Centralized logging with Loki
-- Horizontal Pod Autoscaling and load testing
-- Ingress with TLS
-- Image signing and policy enforcement in the cluster
-
 ---
 
 ## Author
