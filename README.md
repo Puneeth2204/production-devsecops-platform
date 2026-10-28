@@ -177,7 +177,6 @@ The CPU and memory graphs show the rollout of a new backend revision (the step c
 
 ## Getting Started
 
-> Adjust names, regions, and variables to your environment.
 
 **Prerequisites**: AWS CLI (configured), Terraform, kubectl, Helm, Docker.
 
