@@ -2,7 +2,8 @@
 
 ## Overview
 
-The platform uses a custom AWS VPC with public and private subnets across two Availability Zones in the `us-east-1` region.
+The platform uses a custom AWS VPC in the `us-east-1` region to host
+the Amazon EKS cluster and the Hospital Management application.
 
 ## Network Configuration
 
@@ -10,33 +11,48 @@ The platform uses a custom AWS VPC with public and private subnets across two Av
 - Public subnets: `10.0.1.0/24`, `10.0.2.0/24`
 - Private subnets: `10.0.11.0/24`, `10.0.12.0/24`
 - Internet Gateway: Provides internet routing for public subnets.
-- NAT Gateway: Allows resources in private subnets to initiate outbound internet connections.
+- NAT Gateway: Allows private-subnet resources to initiate outbound
+  internet connections.
 - Elastic IP: Provides a static public IPv4 address for the NAT Gateway.
+
+Verify these CIDRs against the deployed Terraform configuration before
+making infrastructure changes.
 
 ## Traffic Flow
 
 ### Public Subnets
 
-Internet → Internet Gateway → Public Route Table → Public Subnet
-
-The public route table directs `0.0.0.0/0` to the Internet Gateway.
+Internet traffic reaches public subnets through the Internet Gateway
+and the associated public route table.
 
 ### Private Subnets
 
-Private Resource → Private Route Table → NAT Gateway → Internet Gateway → Internet
+Private resources use the private route table and NAT Gateway for
+outbound internet access. They do not automatically receive public
+IPv4 addresses.
 
-Private subnet resources do not receive public IPv4 addresses automatically.
+## Amazon EKS
 
-## Routing Associations
+The EKS cluster runs the Hospital Management application in the
+`hospital-management` namespace. The cluster endpoint has public and
+private access configured. Public endpoint access is restricted by
+the configured client CIDR; keep this restriction in place.
 
-Each public subnet is associated with the public route table. Each private subnet is associated with the private route table.
+Kubernetes NetworkPolicies restrict application traffic between the
+frontend, backend, and database. Verify actual connectivity after
+policy changes.
 
-## Kubernetes Integration
+## Monitoring
 
-Public subnet tags identify locations for internet-facing load balancers. Private subnet tags identify locations for internal load balancers. The EKS and load-balancer configurations will be added in later project stages.
+Prometheus and Grafana run in the `monitoring` namespace. Grafana
+dashboards are maintained under `monitoring/grafana/dashboards`.
 
-## Cost and Availability Considerations
+## Cost and Availability
 
-The development architecture uses one NAT Gateway shared by both private subnets to limit infrastructure complexity and cost. This introduces a single point of failure and may incur cross-Availability-Zone data-transfer charges.
+The development environment uses a NAT Gateway, which incurs ongoing
+charges. Review NAT Gateway, EKS, EC2, EBS, and public IPv4 costs
+before leaving the environment running.
 
-NAT Gateway and Elastic IP charges must be considered before provisioning. Resources should be destroyed when no longer needed, after verifying that no other workloads depend on them.
+Do not delete the database persistent volume or Terraform state as
+part of routine cleanup. Verify dependencies and preserve any required
+project evidence before destroying infrastructure.
